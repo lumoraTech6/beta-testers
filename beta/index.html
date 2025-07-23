@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumora Tech Beta Platform</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("YOUR_PUBLIC_KEY");
+    })();
+  </script>
+  <style>
+    :root {
+      --primary: #24d5ff;
+      --dark: #0b0f17;
+      --light: #f4f4f4;
+      --accent: #1e90ff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: var(--light);
+      color: #333;
+    }
+
+    .loading-screen {
+      background-color: #000;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: fixed;
+      width: 100%;
+      z-index: 9999;
+    }
+
+    nav {
+      background-color: var(--dark);
+      padding: 1em 2em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav h1 {
+      color: var(--primary);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5em;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .hero {
+      padding: 4em 2em;
+      background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      color: var(--dark);
+    }
+
+    .announcement {
+      background: var(--accent);
+      color: white;
+      padding: 1em;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5em;
+      padding: 2em;
+    }
+
+    .project-card {
+      background: white;
+      padding: 1.2em;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .project-card h3 {
+      margin-bottom: 0.5em;
+      color: var(--dark);
+    }
+
+    .project-card a {
+      display: inline-block;
+      margin-top: 0.5em;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 2em;
+      text-align: center;
+      margin-top: 4em;
+    }
+
+    .comment-box {
+      padding: 2em;
+      text-align: center;
+    }
+
+    .comment-feed {
+      padding: 1em;
+      margin: 1em auto;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    .comment-entry {
+      background: #e8f8ff;
+      padding: 1em;
+      margin-bottom: 0.5em;
+      border-left: 4px solid var(--primary);
+      animation: fadeOut 20s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; height: 0; margin: 0; padding: 0; overflow: hidden; }
+    }
+
+    .admin-login, .admin-dashboard {
+      display: none;
+      padding: 2em;
+    }
+
+    .dashboard-box {
+      background: #f7f7f7;
+      padding: 1em;
+      margin: 1em 0;
+      border-left: 6px solid var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loading">
+    <h1>Lumora Beta Testers</h1>
+    <p>Launching...</p>
+  </div>
+
+  <nav>
+    <h1>Lumora Tech</h1>
+    <ul>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="announcement" id="announcement">No announcements yet.</div>
+
+  <section class="hero">
+    <h2>Explore and Test Our Beta Projects</h2>
+    <p>Join our community of testers and help shape the future.</p>
+  </section>
+
+  <section id="projects" class="projects">
+    <div class="project-card"><h3>Project 1</h3><p>Voice interaction platform.</p><a href="#" onclick="promptComment()">Try Now</a></div>
+    <!-- ... add other projects ... -->
+  </section>
+
+  <section class="comment-box">
+    <h3>Leave Feedback</h3>
+    <textarea id="commentInput" placeholder="Your comment..."></textarea><br>
+    <button onclick="postComment()">Submit Comment</button>
+  </section>
+
+  <div class="comment-feed" id="commentFeed"></div>
+
+  <footer>
+    <p>© 2025 Lumora Technologies. All rights reserved.</p>
+  </footer>
+
+  <div class="admin-login" id="adminLogin">
+    <h2>Admin Login</h2>
+    <input type="email" id="adminEmail" placeholder="Email">
+    <input type="password" id="adminPassword" placeholder="Password">
+    <button onclick="submitAdminLogin()">Login</button>
+  </div>
+
+  <div class="admin-dashboard" id="adminDashboard">
+    <h2>Dashboard</h2>
+    <div class="dashboard-box"><strong>Visitors:</strong> <span id="visitorCount">1</span></div>
+    <div class="dashboard-box"><strong>Clicks:</strong> <span id="clickCount">0</span></div>
+    <div class="dashboard-box"><strong>Announcements:</strong> <span id="announcementCount">0</span></div>
+    <textarea id="newAnnouncement" placeholder="Post an announcement..."></textarea>
+    <button onclick="postAnnouncement()">Announce</button>
+    <br><br>
+    <button onclick="logoutAdmin()">Logout</button>
+  </div>
+
+  <script>
+    let clickCount = 0;
+    let visitorCount = Math.floor(Math.random() * 40) + 1;
+    let announcementCount = 0;
+    let timer;
+
+    setTimeout(() => {
+      document.getElementById('loading').style.display = 'none';
+    }, 4000);
+
+    function postComment() {
+      const val = document.getElementById("commentInput").value;
+      if (val.trim()) {
+        const entry = document.createElement("div");
+        entry.className = "comment-entry";
+        entry.textContent = val;
+        document.getElementById("commentFeed").prepend(entry);
+        document.getElementById("commentInput").value = "";
+
+        // Send email
+        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+          message: val,
+        });
+
+        // Auto-remove
+        setTimeout(() => entry.remove(), 21000);
+      }
+    }
+
+    function promptComment() {
+      clickCount++;
+      document.getElementById('clickCount').textContent = clickCount;
+      setTimeout(() => {
+        document.getElementById("commentInput").focus();
+      }, 1000);
+    }
+
+    document.addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if (keys['Control'] && keys[' ']) {
+    timer = setTimeout(() => {
+      document.getElementById('adminLogin').style.display = 'block';
+    }, 2000);
+  }
+});
+    document.addEventListener('keyup', e => {
+      keys[e.key] = false;
+      clearTimeout(timer);
+    });
+
+    function submitAdminLogin() {
+      const email = document.getElementById('adminEmail').value;
+      const pass = document.getElementById('adminPassword').value;
+      if (email === 'lumoratech6@gmail.com' && pass === 'lumoratechnologies@gitcompanies') {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+        document.getElementById('visitorCount').textContent = visitorCount;
+      } else {
+        alert('Access Denied');
+      }
+    }
+
+    function postAnnouncement() {
+      const val = document.getElementById('newAnnouncement').value;
+      if(val.trim()) {
+        document.getElementById('announcement').textContent = val;
+        announcementCount++;
+        document.getElementById('announcementCount').textContent = announcementCount;
+        document.getElementById('newAnnouncement').value = '';
+      }
+    }
+
+    function logoutAdmin() {
+      document.getElementById('adminDashboard').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
